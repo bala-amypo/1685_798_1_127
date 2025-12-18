@@ -1,3 +1,12 @@
+package com.example.demo.controller;
+
+import com.example.demo.dto.ComplaintRequest;
+import com.example.demo.entity.Complaint;
+import com.example.demo.service.ComplaintService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 @RestController
 @RequestMapping("/complaints")
 public class ComplaintController {
