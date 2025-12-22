@@ -28,7 +28,7 @@ public class SwaggerConfig {
                         .description("Spring Boot + JWT + Swagger API Documentation")
                         .version("1.0"))
                 .servers(List.of(
-                        new Server().url("https://9305.408procr.amypo.ai/")
+                        new Server().url("https://9101.408procr.amypo.ai/")
                 ))
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
                 .components(new Components()
