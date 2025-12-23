@@ -4,18 +4,22 @@ import com.example.demo.dto.ComplaintRequest;
 import com.example.demo.entity.Complaint;
 import com.example.demo.entity.User;
 import com.example.demo.repository.ComplaintRepository;
-import com.example.demo.service.*;
+import com.example.demo.service.ComplaintService;
+import com.example.demo.service.PriorityRuleService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service   // ✅ REQUIRED
 public class ComplaintServiceImpl implements ComplaintService {
 
     private final ComplaintRepository repo;
     private final PriorityRuleService priorityRuleService;
 
-    public ComplaintServiceImpl(ComplaintRepository repo, PriorityRuleService prs) {
+    public ComplaintServiceImpl(ComplaintRepository repo,
+                                PriorityRuleService priorityRuleService) {
         this.repo = repo;
-        this.priorityRuleService = prs;
+        this.priorityRuleService = priorityRuleService;
     }
 
     @Override

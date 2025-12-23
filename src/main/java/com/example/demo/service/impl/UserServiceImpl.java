@@ -5,7 +5,9 @@ import com.example.demo.exception.BadRequestException;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
+@Service   // ✅ REQUIRED
 public class UserServiceImpl implements UserService {
 
     private final UserRepository repo;
@@ -21,6 +23,7 @@ public class UserServiceImpl implements UserService {
         if (repo.findByEmail(email).isPresent()) {
             throw new BadRequestException("email already exists");
         }
+
         User u = new User();
         u.setFullName(name);
         u.setEmail(email);
