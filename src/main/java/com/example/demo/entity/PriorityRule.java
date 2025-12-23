@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 public class PriorityRule {
@@ -9,35 +10,16 @@ public class PriorityRule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String category;
-    private Integer baseScore;
+    private String ruleName;
     private String description;
+    private Integer weight;
+    private boolean active = true;
 
-    public Long getId() {
-        return id;
-    }
+    @ManyToMany(mappedBy = "priorityRules")
+    private List<Complaint> complaints;
 
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public Integer getBaseScore() {
-        return baseScore;
-    }
-
-    public void setBaseScore(Integer baseScore) {
-        this.baseScore = baseScore;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    // getters & setters
+    public Long getId() { return id; }
+    public Integer getWeight() { return weight; }
+    public boolean isActive() { return active; }
 }
