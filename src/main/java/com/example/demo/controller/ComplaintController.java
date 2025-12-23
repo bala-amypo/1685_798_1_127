@@ -1,8 +1,9 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.ComplaintRequest;
-import com.example.demo.entity.Complaint;
+import com.example.demo.entity.User;
 import com.example.demo.service.ComplaintService;
+import com.example.demo.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,23 +13,30 @@ import java.util.List;
 public class ComplaintController {
 
     private final ComplaintService service;
+    private final UserService userService;
 
-    public ComplaintController(ComplaintService service) {
+    public ComplaintController(ComplaintService service, UserService userService) {
         this.service = service;
+        this.userService = userService;
     }
 
     @PostMapping("/submit")
-    public Complaint submit(@RequestBody ComplaintRequest req) {
-        return service.submitComplaint(req);
+    public Object submit(@RequestBody ComplaintRequest request,
+                         @RequestParam String email) {
+
+        User user = userService.findByEmail(email);
+        return service.submitComplaint(request, user);
     }
 
     @GetMapping("/user/{userId}")
-    public List<Complaint> user(@PathVariable Long userId) {
-        return service.getUserComplaints(userId);
+    public List<?> getUserComplaints(@PathVariable Long userId) {
+        User user = new User();
+        user.setId(userId);
+        return service.getComplaintsForUser(user);
     }
 
     @GetMapping("/prioritized")
-    public List<Complaint> prioritized() {
+    public List<?> prioritized() {
         return service.getPrioritizedComplaints();
     }
 }

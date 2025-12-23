@@ -22,7 +22,7 @@ public class Complaint {
     private Integer priorityScore;
 
     @Enumerated(EnumType.STRING)
-    private Status status = Status.NEW;
+    private Status status;
 
     @Enumerated(EnumType.STRING)
     private Severity severity;
@@ -47,9 +47,17 @@ public class Complaint {
         this.status = Status.NEW;
     }
 
-    // getters & setters
-    public void setPriorityScore(Integer score) { this.priorityScore = score; }
-    public Integer getPriorityScore() { return priorityScore; }
-    public User getCustomer() { return customer; }
+    // ✅ GETTERS & SETTERS
+    public void setTitle(String title) { this.title = title; }
+    public void setDescription(String description) { this.description = description; }
+    public void setCategory(String category) { this.category = category; }
+    public void setChannel(String channel) { this.channel = channel; }
+    public void setSeverity(Severity severity) { this.severity = severity; }
+    public void setUrgency(Urgency urgency) { this.urgency = urgency; }
     public void setCustomer(User customer) { this.customer = customer; }
+    public void setPriorityScore(Integer priorityScore) { this.priorityScore = priorityScore; }
+
+    public Severity getSeverity() { return severity; }
+    public Urgency getUrgency() { return urgency; }
+    public Integer getPriorityScore() { return priorityScore; }
 }
