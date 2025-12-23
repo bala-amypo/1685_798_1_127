@@ -1,10 +1,10 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.entity.*;
 import com.example.demo.repository.PriorityRuleRepository;
 import com.example.demo.service.PriorityRuleService;
-import org.springframework.stereotype.Service;
+import java.util.List;
 
-@Service
 public class PriorityRuleServiceImpl implements PriorityRuleService {
 
     private final PriorityRuleRepository repo;
@@ -13,12 +13,24 @@ public class PriorityRuleServiceImpl implements PriorityRuleService {
         this.repo = repo;
     }
 
-    public int calculatePriority(String category) {
-        var rule = repo.findByCategory(category);
-        return rule != null ? rule.getBaseScore() : 0;
+    @Override
+    public int computePriorityScore(Complaint c) {
+        int score = 0;
+
+        if (c.getSeverity() != null)
+            score += c.getSeverity().ordinal() * 10;
+
+        if (c.getUrgency() != null)
+            score += c.getUrgency().ordinal() * 5;
+
+        for (PriorityRule rule : repo.findByActiveTrue()) {
+            score += rule.getWeight();
+        }
+        return Math.max(score, 0);
     }
 
-    public Object getAllRules() {
-        return repo.findAll();
+    @Override
+    public List<PriorityRule> getActiveRules() {
+        return repo.findByActiveTrue();
     }
 }
