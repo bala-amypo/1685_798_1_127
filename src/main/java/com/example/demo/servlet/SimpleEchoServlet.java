@@ -1,23 +1,21 @@
 package com.example.demo.servlet;
 
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.*;
 import java.io.IOException;
 
-@WebServlet(urlPatterns = {"/ping", "/health"})
 public class SimpleEchoServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.setContentType("text/plain");
-        String uri = req.getRequestURI();
+    protected void doGet(HttpServletRequest req, HttpServletResponse res)
+            throws IOException {
 
-        if (uri.endsWith("/ping")) {
-            resp.getWriter().write("PONG");
-        } else if (uri.endsWith("/health")) {
-            resp.getWriter().write("OK");
+        res.setContentType("text/plain");
+        String name = req.getParameter("name");
+
+        if (name == null || name.trim().isEmpty()) {
+            res.getWriter().write("Hello, Guest");
+        } else {
+            res.getWriter().write("Hello, " + name.trim());
         }
     }
 }
