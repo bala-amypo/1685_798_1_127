@@ -6,44 +6,52 @@ import com.example.demo.entity.User;
 import com.example.demo.repository.ComplaintRepository;
 import com.example.demo.service.ComplaintService;
 import com.example.demo.service.PriorityRuleService;
+import com.example.demo.service.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service   // ✅ REQUIRED
+@Service
 public class ComplaintServiceImpl implements ComplaintService {
-
-    private final ComplaintRepository repo;
+    
+    private final ComplaintRepository complaintRepository;
+    private final UserService userService;
     private final PriorityRuleService priorityRuleService;
-
-    public ComplaintServiceImpl(ComplaintRepository repo,
-                                PriorityRuleService priorityRuleService) {
-        this.repo = repo;
+    
+    public ComplaintServiceImpl(ComplaintRepository complaintRepository, 
+                               UserService userService, 
+                               ComplaintService complaintService,
+                               PriorityRuleService priorityRuleService) {
+        this.complaintRepository = complaintRepository;
+        this.userService = userService;
         this.priorityRuleService = priorityRuleService;
     }
-
+    
     @Override
-    public Complaint submitComplaint(ComplaintRequest r, User user) {
-        Complaint c = new Complaint();
-        c.setCustomer(user);
-        c.setTitle(r.title);
-        c.setDescription(r.description);
-        c.setCategory(r.category);
-        c.setChannel(r.channel);
-        c.setSeverity(r.severity);
-        c.setUrgency(r.urgency);
-
-        c.setPriorityScore(priorityRuleService.computePriorityScore(c));
-        return repo.save(c);
+    public Complaint submitComplaint(ComplaintRequest request, User customer) {
+        Complaint complaint = new Complaint();
+        complaint.setTitle(request.getTitle());
+        complaint.setDescription(request.getDescription());
+        complaint.setCategory(request.getCategory());
+        complaint.setChannel(request.getChannel());
+        complaint.setSeverity(request.getSeverity());
+        complaint.setUrgency(request.getUrgency());
+        complaint.setCustomer(customer);
+        
+        // Compute priority score
+        int priorityScore = priorityRuleService.computePriorityScore(complaint);
+        complaint.setPriorityScore(priorityScore);
+        
+        return complaintRepository.save(complaint);
     }
-
+    
     @Override
-    public List<Complaint> getComplaintsForUser(User user) {
-        return repo.findByCustomer(user);
+    public List<Complaint> getComplaintsForUser(User customer) {
+        return complaintRepository.findByCustomer(customer);
     }
-
+    
     @Override
     public List<Complaint> getPrioritizedComplaints() {
-        return repo.findAllOrderByPriorityScoreDescCreatedAtAsc();
+        return complaintRepository.findAllOrderByPriorityScoreDescCreatedAtAsc();
     }
 }

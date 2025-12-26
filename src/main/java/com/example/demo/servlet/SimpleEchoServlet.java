@@ -1,21 +1,29 @@
 package com.example.demo.servlet;
 
-import jakarta.servlet.http.*;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
+@WebServlet("/simple-echo")
 public class SimpleEchoServlet extends HttpServlet {
-
+    
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse res)
-            throws IOException {
-
-        res.setContentType("text/plain");
-        String name = req.getParameter("name");
-
+    public void doGet(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        
+        response.setContentType("text/plain");
+        response.setStatus(HttpServletResponse.SC_OK);
+        
+        String name = request.getParameter("name");
+        
         if (name == null || name.trim().isEmpty()) {
-            res.getWriter().write("Hello, Guest");
+            response.getWriter().write("Hello, Guest");
         } else {
-            res.getWriter().write("Hello, " + name.trim());
+            response.getWriter().write("Hello, " + name.trim());
         }
     }
 }

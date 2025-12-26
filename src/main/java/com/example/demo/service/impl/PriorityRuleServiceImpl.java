@@ -8,33 +8,50 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service   // ✅ REQUIRED
+@Service
 public class PriorityRuleServiceImpl implements PriorityRuleService {
-
-    private final PriorityRuleRepository repo;
-
-    public PriorityRuleServiceImpl(PriorityRuleRepository repo) {
-        this.repo = repo;
+    
+    private final PriorityRuleRepository priorityRuleRepository;
+    
+    public PriorityRuleServiceImpl(PriorityRuleRepository priorityRuleRepository) {
+        this.priorityRuleRepository = priorityRuleRepository;
     }
-
+    
     @Override
-    public int computePriorityScore(Complaint c) {
-        int score = 0;
-
-        if (c.getSeverity() != null)
-            score += c.getSeverity().ordinal() * 10;
-
-        if (c.getUrgency() != null)
-            score += c.getUrgency().ordinal() * 5;
-
-        for (PriorityRule rule : repo.findByActiveTrue()) {
-            score += rule.getWeight();
+    public int computePriorityScore(Complaint complaint) {
+        List<PriorityRule> activeRules = getActiveRules();
+        int baseScore = 0;
+        
+        // Base score from severity
+        if (complaint.getSeverity() != null) {
+            switch (complaint.getSeverity()) {
+                case LOW -> baseScore += 1;
+                case MEDIUM -> baseScore += 3;
+                case HIGH -> baseScore += 5;
+                case CRITICAL -> baseScore += 8;
+            }
         }
-        return Math.max(score, 0);
+        
+        // Base score from urgency
+        if (complaint.getUrgency() != null) {
+            switch (complaint.getUrgency()) {
+                case LOW -> baseScore += 1;
+                case MEDIUM -> baseScore += 2;
+                case HIGH -> baseScore += 4;
+                case IMMEDIATE -> baseScore += 6;
+            }
+        }
+        
+        // Apply rule weights
+        int ruleScore = activeRules.stream()
+                .mapToInt(PriorityRule::getWeight)
+                .sum();
+        
+        return Math.max(0, baseScore + ruleScore);
     }
-
+    
     @Override
     public List<PriorityRule> getActiveRules() {
-        return repo.findByActiveTrue();
+        return priorityRuleRepository.findByActiveTrue();
     }
 }
