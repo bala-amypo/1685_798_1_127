@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.ServletException;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 public class SimpleEchoServlet extends HttpServlet {
 
@@ -13,12 +14,21 @@ public class SimpleEchoServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String message = request.getParameter("message");
+        // ✅ Content type REQUIRED by test
+        response.setContentType("text/plain");
 
-        if (message == null) {
-            message = "";
+        String name = request.getParameter("name");
+
+        // ✅ Handle null, empty, blank, trimmed cases
+        if (name == null || name.trim().isEmpty()) {
+            name = "Guest";
+        } else {
+            name = name.trim();
         }
 
-        response.getWriter().write(message);
+        // ✅ Write response body
+        PrintWriter out = response.getWriter();
+        out.write("Hello, " + name);
+        out.flush();
     }
 }
