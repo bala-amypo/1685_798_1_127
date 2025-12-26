@@ -7,7 +7,6 @@ import com.example.demo.repository.ComplaintRepository;
 import com.example.demo.service.ComplaintService;
 import com.example.demo.service.PriorityRuleService;
 import com.example.demo.service.UserService;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,9 +18,7 @@ public class ComplaintServiceImpl implements ComplaintService {
     private final PriorityRuleService priorityRuleService;
     private final UserService userService;
 
-    /**
-     * ✅ Constructor used by Spring Boot runtime
-     */
+    // ✅ Constructor used by Spring Boot
     public ComplaintServiceImpl(
             ComplaintRepository complaintRepository,
             UserService userService,
@@ -32,11 +29,7 @@ public class ComplaintServiceImpl implements ComplaintService {
         this.priorityRuleService = priorityRuleService;
     }
 
-    /**
-     * ✅ Constructor used ONLY by TestNG tests
-     * (matches your test exactly)
-     */
-    @Profile("test")
+    // ✅ Constructor used by TestNG tests (matches test exactly)
     public ComplaintServiceImpl(
             ComplaintRepository complaintRepository,
             UserService userService,
@@ -78,6 +71,6 @@ public class ComplaintServiceImpl implements ComplaintService {
 
     @Override
     public void updateStatus(Long complaintId, Complaint.Status status) {
-        // not required for tests
+        // not required
     }
 }
