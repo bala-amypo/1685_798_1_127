@@ -7,40 +7,64 @@ import java.util.Set;
 @Entity
 @Table(name = "priority_rules")
 public class PriorityRule {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @Column(name = "rule_name")
+
     private String ruleName;
-    
     private String description;
     private Integer weight;
+
     private boolean active = true;
-    
+
     @ManyToMany(mappedBy = "priorityRules")
     private Set<Complaint> complaints = new HashSet<>();
+
+    public PriorityRule() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getRuleName() {
+        return ruleName;
+    }
+
+    public void setRuleName(String ruleName) {
+        this.ruleName = ruleName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
     
-    // Constructors
-    public PriorityRule() {}
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Integer getWeight() {
+        return weight;
+    }
     
-    // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public void setWeight(Integer weight) {
+        this.weight = weight;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
     
-    public String getRuleName() { return ruleName; }
-    public void setRuleName(String ruleName) { this.ruleName = ruleName; }
-    
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-    
-    public Integer getWeight() { return weight; }
-    public void setWeight(Integer weight) { this.weight = weight; }
-    
-    public boolean isActive() { return active; }
-    public void setActive(boolean active) { this.active = active; }
-    
-    public Set<Complaint> getComplaints() { return complaints; }
-    public void setComplaints(Set<Complaint> complaints) { this.complaints = complaints; }
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public Set<Complaint> getComplaints() {
+        return complaints;
+    }
 }
