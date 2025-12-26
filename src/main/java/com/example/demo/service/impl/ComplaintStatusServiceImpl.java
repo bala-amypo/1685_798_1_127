@@ -1,33 +1,40 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.*;
-import com.example.demo.repository.*;
+import com.example.demo.entity.Complaint;
+import com.example.demo.entity.ComplaintStatus;
+import com.example.demo.repository.ComplaintRepository;
+import com.example.demo.repository.ComplaintStatusRepository;
 import com.example.demo.service.ComplaintStatusService;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
 public class ComplaintStatusServiceImpl implements ComplaintStatusService {
-
-    private final ComplaintStatusRepository statusRepo;
-    private final ComplaintRepository complaintRepo;
-
-    public ComplaintStatusServiceImpl(
-            ComplaintStatusRepository statusRepo,
-            ComplaintRepository complaintRepo) {
-        this.statusRepo = statusRepo;
-        this.complaintRepo = complaintRepo;
+    
+    private final ComplaintStatusRepository complaintStatusRepository;
+    private final ComplaintRepository complaintRepository;
+    
+    public ComplaintStatusServiceImpl(ComplaintStatusRepository complaintStatusRepository, 
+                                    ComplaintRepository complaintRepository) {
+        this.complaintStatusRepository = complaintStatusRepository;
+        this.complaintRepository = complaintRepository;
     }
-
-    public ComplaintStatus updateStatus(Long complaintId, String status) {
-        Complaint c = complaintRepo.findById(complaintId).orElseThrow();
-        ComplaintStatus cs = new ComplaintStatus();
-        cs.setComplaint(c);
-        cs.setStatus(status);
-        return statusRepo.save(cs);
+    
+    @Override
+    public void updateStatus(Long complaintId, ComplaintStatus.Status status) {
+        Complaint complaint = complaintRepository.findById(complaintId)
+                .orElseThrow(() -> new RuntimeException("Complaint not found"));
+        
+        ComplaintStatus complaintStatus = new ComplaintStatus();
+        complaintStatus.setComplaint(complaint);
+        complaintStatus.setStatus(status);
+        
+        complaintStatusRepository.save(complaintStatus);
     }
-
+    
+    @Override
     public List<ComplaintStatus> getStatusHistory(Long complaintId) {
-        return statusRepo.findByComplaintId(complaintId);
+        return complaintStatusRepository.findByComplaintIdOrderByUpdatedOnDesc(complaintId);
     }
 }
