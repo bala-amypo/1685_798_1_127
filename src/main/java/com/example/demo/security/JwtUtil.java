@@ -64,11 +64,11 @@ public class JwtUtil implements JwtService {
                 .getBody();
     }
     
-    private Boolean isTokenExpired(String token) {
+    private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
     
-    public Boolean validateToken(String token, String username) {
+    public boolean validateToken(String token, String username) {
         if (token == null) return false;
         try {
             final String extractedUsername = extractEmail(token);
