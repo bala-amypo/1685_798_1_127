@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "priority_rules")
 public class PriorityRule {
 
     @Id
@@ -15,56 +14,25 @@ public class PriorityRule {
     private String ruleName;
     private String description;
     private Integer weight;
-
     private boolean active = true;
 
     @ManyToMany(mappedBy = "priorityRules")
     private Set<Complaint> complaints = new HashSet<>();
 
-    public PriorityRule() {
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public Long getId() {
-        return id;
-    }
+    public String getRuleName() { return ruleName; }
+    public void setRuleName(String ruleName) { this.ruleName = ruleName; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-    public String getRuleName() {
-        return ruleName;
-    }
+    public Integer getWeight() { return weight; }
+    public void setWeight(Integer weight) { this.weight = weight; }
 
-    public void setRuleName(String ruleName) {
-        this.ruleName = ruleName;
-    }
+    public boolean isActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
 
-    public String getDescription() {
-        return description;
-    }
-    
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Integer getWeight() {
-        return weight;
-    }
-    
-    public void setWeight(Integer weight) {
-        this.weight = weight;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-    
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public Set<Complaint> getComplaints() {
-        return complaints;
-    }
+    public Set<Complaint> getComplaints() { return complaints; }
 }

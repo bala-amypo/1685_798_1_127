@@ -18,7 +18,6 @@ public class ComplaintServiceImpl implements ComplaintService {
     private final PriorityRuleService priorityRuleService;
     private final UserService userService;
 
-    // Constructor for Spring
     public ComplaintServiceImpl(
             ComplaintRepository complaintRepository,
             UserService userService,
@@ -29,7 +28,7 @@ public class ComplaintServiceImpl implements ComplaintService {
         this.priorityRuleService = priorityRuleService;
     }
 
-    // Constructor required by TestNG (DO NOT REMOVE)
+    // Constructor required by TestNG
     public ComplaintServiceImpl(
             ComplaintRepository complaintRepository,
             UserService userService,
@@ -52,9 +51,7 @@ public class ComplaintServiceImpl implements ComplaintService {
         complaint.setUrgency(request.getUrgency());
         complaint.setCustomer(customer);
 
-        int score = priorityRuleService.computePriorityScore(complaint);
-        complaint.setPriorityScore(score);
-
+        complaint.setPriorityScore(priorityRuleService.computePriorityScore(complaint));
         return complaintRepository.save(complaint);
     }
 
@@ -69,7 +66,5 @@ public class ComplaintServiceImpl implements ComplaintService {
     }
 
     @Override
-    public void updateStatus(Long complaintId, Complaint.Status status) {
-        // not required
-    }
+    public void updateStatus(Long complaintId, Complaint.Status status) {}
 }
