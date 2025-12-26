@@ -10,46 +10,49 @@ import java.util.List;
 
 @Service
 public class PriorityRuleServiceImpl implements PriorityRuleService {
-    
+
     private final PriorityRuleRepository priorityRuleRepository;
-    
+
     public PriorityRuleServiceImpl(PriorityRuleRepository priorityRuleRepository) {
         this.priorityRuleRepository = priorityRuleRepository;
     }
-    
+
     @Override
     public int computePriorityScore(Complaint complaint) {
-        List<PriorityRule> activeRules = getActiveRules();
-        int baseScore = 0;
-        
-        // Base score from severity
+
+        int score = 0;
+
+        // Severity contribution
         if (complaint.getSeverity() != null) {
             switch (complaint.getSeverity()) {
-                case LOW -> baseScore += 1;
-                case MEDIUM -> baseScore += 3;
-                case HIGH -> baseScore += 5;
-                case CRITICAL -> baseScore += 8;
+                case LOW -> score += 1;
+                case MEDIUM -> score += 3;
+                case HIGH -> score += 5;
+                case CRITICAL -> score += 7;
             }
         }
-        
-        // Base score from urgency
+
+        // Urgency contribution
         if (complaint.getUrgency() != null) {
             switch (complaint.getUrgency()) {
-                case LOW -> baseScore += 1;
-                case MEDIUM -> baseScore += 2;
-                case HIGH -> baseScore += 4;
-                case IMMEDIATE -> baseScore += 6;
+                case LOW -> score += 1;
+                case MEDIUM -> score += 3;
+                case HIGH -> score += 5;
+                case IMMEDIATE -> score += 7;
             }
         }
-        
-        // Apply rule weights
-        int ruleScore = activeRules.stream()
-                .mapToInt(PriorityRule::getWeight)
-                .sum();
-        
-        return Math.max(0, baseScore + ruleScore);
+
+        // Priority rules contribution
+        List<PriorityRule> rules = priorityRuleRepository.findByActiveTrue();
+        if (rules != null) {
+            for (PriorityRule rule : rules) {
+                score += rule.getWeight();
+            }
+        }
+
+        return Math.max(score, 0);
     }
-    
+
     @Override
     public List<PriorityRule> getActiveRules() {
         return priorityRuleRepository.findByActiveTrue();
