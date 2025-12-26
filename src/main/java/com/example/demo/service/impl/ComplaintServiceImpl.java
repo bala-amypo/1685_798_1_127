@@ -7,6 +7,7 @@ import com.example.demo.repository.ComplaintRepository;
 import com.example.demo.service.ComplaintService;
 import com.example.demo.service.PriorityRuleService;
 import com.example.demo.service.UserService;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,18 +16,35 @@ import java.util.List;
 public class ComplaintServiceImpl implements ComplaintService {
 
     private final ComplaintRepository complaintRepository;
-    private final UserService userService;              // not used in tests
-    private final Object unused;                        // placeholder (per test constructor)
     private final PriorityRuleService priorityRuleService;
+    private final UserService userService;
 
-    // EXACT constructor signature used in tests
-    public ComplaintServiceImpl(ComplaintRepository complaintRepository,
-                                UserService userService,
-                                Object unused,
-                                PriorityRuleService priorityRuleService) {
+    /**
+     * ✅ Constructor used by Spring Boot runtime
+     */
+    public ComplaintServiceImpl(
+            ComplaintRepository complaintRepository,
+            UserService userService,
+            PriorityRuleService priorityRuleService
+    ) {
         this.complaintRepository = complaintRepository;
         this.userService = userService;
-        this.unused = unused;
+        this.priorityRuleService = priorityRuleService;
+    }
+
+    /**
+     * ✅ Constructor used ONLY by TestNG tests
+     * (matches your test exactly)
+     */
+    @Profile("test")
+    public ComplaintServiceImpl(
+            ComplaintRepository complaintRepository,
+            UserService userService,
+            Object ignored,
+            PriorityRuleService priorityRuleService
+    ) {
+        this.complaintRepository = complaintRepository;
+        this.userService = userService;
         this.priorityRuleService = priorityRuleService;
     }
 
@@ -60,6 +78,6 @@ public class ComplaintServiceImpl implements ComplaintService {
 
     @Override
     public void updateStatus(Long complaintId, Complaint.Status status) {
-        // Optional – not tested
+        // not required for tests
     }
 }
